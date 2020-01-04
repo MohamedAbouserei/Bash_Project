@@ -12,7 +12,7 @@ then
 echo "Please enter A Valid Name"
 read DBName
 else
-mkdir ~/DBMS/$DBName 2> ~/DBMS/error.log
+mkdir ~/DBMS/$DBName
 if [[ $? == 0 ]]
 then
 echo "DataBase Created"
@@ -26,24 +26,63 @@ done
 }
 function DeleteDB()
 {
-`cd ~/DBMS`
+cd ~/DBMS/
 i=0
 while read line
 do
     array[ $i ]="$line"        
     (( i++ ))
-done < <(ls -d)
+done < <(ls)
+select choice in "${array[@]}"; do
 
-echo ${array[1]} 
+  [[ -n $choice ]] || { echo "Invalid choice. Please try again." >&2; continue; }
+rm -r $choice  
+if [[ $? == 0 ]]
+then
+echo "DataBase Deleted"
+break
+else
+echo "Error While Deleting DB"
+fi
+break # valid choice was made; exit prompt.
+done
+read -r id sn unused <<<"$choice"
+
 }
 function listAllDB()
 {
-echo "3"
+cd ~/DBMS/
+i=1
+while read line
+do
+    echo $i ")" "$line"        
+    (( i++ ))
+done < <(ls)
 }
 
 function usedb ()
 {
-echo "4"
+cd ~/DBMS/
+i=0
+while read line
+do
+    array[ $i ]="$line"        
+    (( i++ ))
+done < <(ls)
+select choice in "${array[@]}"; do
+
+  [[ -n $choice ]] || { echo "Invalid choice. Please try again." >&2; continue; }
+cd ~/DBMS/$choice
+if [[ $? == 0 ]]
+then
+echo "DB $choice in effect"
+break
+else
+echo "Error While using this  DB"
+fi
+break # valid choice was made; exit prompt.
+done
+read -r id sn unused <<<"$choice"
 }
 
 
