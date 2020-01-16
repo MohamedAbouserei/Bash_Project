@@ -69,13 +69,18 @@ do
     array[ $i ]="$line"        
     (( i++ ))
 done < <(ls)
+
 select choice in "${array[@]}"; do
 
   [[ -n $choice ]] || { echo "Invalid choice. Please try again." >&2; continue; }
 cd ~/DBMS/$choice
+
 if [[ $? == 0 ]]
 then
+
 echo "DB $choice in effect"
+
+sh ~/bashProject/dml.sh 1 $choice
 break
 else
 echo "Error While using this  DB"

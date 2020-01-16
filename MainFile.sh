@@ -1,4 +1,5 @@
 #!/bin/bash
+mkdir -p ~/DBMS
 options=("Create DB" "Delete DB" "Select DB" "list All DataBases" "Quit")
 while true
 do
