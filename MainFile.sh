@@ -9,18 +9,22 @@ do
     case $opt in
         "Create DB")
            ./CreateDB.sh 1
+		break
             ;;
         "Delete DB")
             ./CreateDB.sh 2 
-            ;;
+	break            
+;;
         "Select DB")
            ./CreateDB.sh 4
+	break
             ;;
  	"list All DataBases")
             ./CreateDB.sh 3
+	break 
             ;;
         "Quit")
-            break
+            break 2
             ;;
         *) echo "invalid option $REPLY";;
     esac

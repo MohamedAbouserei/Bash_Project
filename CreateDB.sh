@@ -93,7 +93,7 @@ read -r id sn unused <<<"$choice"
 
 if [[ $1 == 1 ]]
 then
-CreateDB
+CreateDB 
 elif [[ $1 == 2 ]]
 then
 DeleteDB

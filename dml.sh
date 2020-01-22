@@ -15,6 +15,7 @@ touch ~/DBMS/$1/$tableName
 if [[ $? == 0 ]]
 then
 echo "table Created"
+
 break
 else
 echo "Error While Creating table enter other name"
