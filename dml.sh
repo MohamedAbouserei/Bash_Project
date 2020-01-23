@@ -1,4 +1,5 @@
 #!/bin/bash
+. ~/bashProject/Metadata.sh
 #functions
 function Createtable()
 {
@@ -11,6 +12,10 @@ then
 echo "Please enter A Valid Name"
 read tableName
 else
+if [[ "$tableName" =~ $num ]]
+then
+echo "done" 
+fi
 touch ~/DBMS/$1/$tableName
 if [[ $? == 0 ]]
 then
@@ -23,11 +28,13 @@ read tableName
 fi
 fi
 done 
+
 }
+
 
 if [[ $1 == 1 ]]
 then
-Createtable $2  
+Createtable $2
 else 
 echo "Something went wrong"
 fi
