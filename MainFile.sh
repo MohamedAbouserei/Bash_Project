@@ -11,7 +11,7 @@ do
            ./CreateDB.sh 1
 		break
             ;;
-        "Delete DB")
+        "Drop DB")
             ./CreateDB.sh 2 
 	break            
 ;;

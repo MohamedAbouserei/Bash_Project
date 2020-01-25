@@ -193,9 +193,44 @@ do
     (( i++ ))
 done < <(ls)
 }
+function Deletetablecontent() {
+  cd ~/DBMS/$1
+i=0
+while read line
+do
+    array[ $i ]="$line"        
+    (( i++ ))
+done < <(ls)
+select choice in "${array[@]}"; do
 
+  [[ -n $choice ]] || { echo "Invalid choice. Please try again." >&2; continue; }
+tableName=~/DBMS/$1/$choice
+echo "please enter the Primary key"
+read field
+  Crow=$(awk 'BEGIN{FS=" "};{if(NR!=1){{if($1=="'$field'") print NR}}}' $tableName)
+echo $Crow
+  if [[ $Crow == "" ]]
+  then
+    echo "Not Found"
+    break
+  else
+      sed -i ''$Crow'd' $tableName 2>> /dev/null
+      echo "Row Deleted Successfully"
+fi
+if [[ $? == 0 ]]
+then
+echo "record Deleted"
+break
+else
+echo "Error While Deleting table"
+fi
+break # valid choice was made; exit prompt.
+done
+read -r id sn unused <<<"$choice"
 
-options=("Create Table" "Delete Table" "Insert Into Table" "list All Tables" "Update Value In Table" "Quit")
+}
+
+options=("Create Table" "Delete Table" "Insert Into Table" "list All Tables" "Update Value In Table" "Delete From Table" "Quit")
 while true
 do
 select opt in "${options[@]}"
@@ -222,6 +257,10 @@ do
             ;;
 	"list All Tables")
             listAlltables $1
+	break 
+            ;;
+"Delete From Table")
+         Deletetablecontent $1
 	break 
             ;;
         "Quit")
