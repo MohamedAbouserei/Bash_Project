@@ -12,7 +12,6 @@ then
 echo "enter A Valid Name or table already found "
 read tableName
 else
-touch ~/DBMS/$1/$tableName
 echo "plz enter the number of columns "
 read num
 if ! [[ "$num" =~ $num ]]
@@ -50,12 +49,26 @@ then
 echo "dublicates found try again"
 break
 fi
+echo "please enter the Primary key"
+select choice in "${array[@]}"; 
+do
+ [[ -n $choice ]] || { echo "Invalid choice. Please try again." >&2; continue; }
+for i in "${!array[@]}"; do
+   if [[ "${array[$i]}" == $choice ]]; then
+       let data="${i}";
+   fi
+done
+tmp=${array[$data]}
+array[$data]=${array[0]}
+array[0]=$tmp
+break
+done
+touch ~/DBMS/$1/$tableName
 echo "${array[@]}" > ~/DBMS/$1/$tableName
 if [[ $? == 0 ]]
 then
 echo "table created"
 break
-
 fi
 fi
 done 
