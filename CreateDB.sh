@@ -80,7 +80,7 @@ then
 
 echo "DB $choice in effect"
 
-sh ~/bashProject/dml.sh 1 $choice
+~/bashProject/dml.sh $choice
 break
 else
 echo "Error While using this  DB"

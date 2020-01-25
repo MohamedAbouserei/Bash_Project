@@ -1,6 +1,6 @@
 #!/bin/bash
 mkdir -p ~/DBMS
-options=("Create DB" "Delete DB" "Select DB" "list All DataBases" "Quit")
+options=("Create DB" "Drop DB" "Select DB" "list All DataBases" "Quit")
 while true
 do
 select opt in "${options[@]}"
