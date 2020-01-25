@@ -159,10 +159,34 @@ fi
 done 
 
 }
+function Removetable()
+{
+cd ~/DBMS/$1
+i=0
+while read line
+do
+    array[ $i ]="$line"        
+    (( i++ ))
+done < <(ls)
+select choice in "${array[@]}"; do
+
+  [[ -n $choice ]] || { echo "Invalid choice. Please try again." >&2; continue; }
+rm -r ~/DBMS/$1/$choice  
+if [[ $? == 0 ]]
+then
+echo "Table Deleted"
+break
+else
+echo "Error While Deleting table"
+fi
+break # valid choice was made; exit prompt.
+done
+read -r id sn unused <<<"$choice"
+}
 
 
 
-options=("Create Table" "Delete Table" "Insert Into Table" "list All Table Content" "Update Value In Table" "Quit")
+options=("Create Table" "Delete Table" "Insert Into Table" "list All Tables" "Update Value In Table" "Quit")
 while true
 do
 select opt in "${options[@]}"
@@ -173,17 +197,21 @@ do
            Createtable $1
 		break
             ;;
-        "Delete DB")
-            
+        "Delete Table")
+            Removetable $1
 	break            
 ;;
       
  	"Insert Into Table")
-         Inserttable $1   
+         Inserttable $1
 	break 
             ;;
 
 	"Update Value In Table")
+            
+	break 
+            ;;
+	"list All Tables")
             
 	break 
             ;;
