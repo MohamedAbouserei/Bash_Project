@@ -1,3 +1,5 @@
 #!/bin/bash
-num="^[0-9]+$"
+number="^[0-9]+$"
+string='^[a-z]|[A-Z]$'
+
 

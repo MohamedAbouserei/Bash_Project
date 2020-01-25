@@ -7,24 +7,55 @@ echo "please enter the table Name:"
 read tableName
 while true 
 do
-if [[ -z "$tableName" ]];
+if [[ -z "$tableName" || ! "$tableName" =~ $string || -f "$tableName" ]];
 then
-echo "Please enter A Valid Name"
+echo "enter A Valid Name or table already found "
 read tableName
 else
-if [[ "$tableName" =~ $num ]]
-then
-echo "done" 
-fi
 touch ~/DBMS/$1/$tableName
+echo "plz enter the number of columns "
+read num
+if ! [[ "$num" =~ $num ]]
+then
+echo "plz number correctly"
+read num
+fi
+echo "plz enter name of columns with datatype sperated with :"
+declare -a array
+declare -a checkarr
+for (( i=1 ; i <= num ; i++ ))
+do 
+read str
+if [[ $str != *":"* ]]
+then
+echo "types must be seprated by :"
+break 2
+fi
+IFS=':'
+read -ra NAMES <<< "$str"
+echo "${NAMES[0]}"
+if [[ ("${NAMES[1]}" == 'number') || ( "${NAMES[1]}" == 'string' ) || ( "${NAMES[1]}" == 'text' ) ]]
+then
+array[i]=$str
+checkarr[i]=${NAMES[0]}
+else
+echo "plz enter correct data type"
+i=$i-1
+fi
+done
+uniqueNum=$(printf '%s\n' "${checkarr[@]}"|awk '!($0 in seen){seen[$0];c++} END {print c}')
+(( uniqueNum != ${#checkarr[@]} )) && flag=1
+if [[ $flag == 1 ]]
+then
+echo "dublicates found try again"
+break
+fi
+echo "${array[@]}" > ~/DBMS/$1/$tableName
 if [[ $? == 0 ]]
 then
-echo "table Created"
-
+echo "table created"
 break
-else
-echo "Error While Creating table enter other name"
-read tableName
+
 fi
 fi
 done 
