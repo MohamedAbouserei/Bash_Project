@@ -183,7 +183,16 @@ break # valid choice was made; exit prompt.
 done
 read -r id sn unused <<<"$choice"
 }
-
+function listAlltables()
+{
+cd ~/DBMS/$1
+i=1
+while read line
+do
+    echo $i ")" "$line"        
+    (( i++ ))
+done < <(ls)
+}
 
 
 options=("Create Table" "Delete Table" "Insert Into Table" "list All Tables" "Update Value In Table" "Quit")
@@ -212,7 +221,7 @@ do
 	break 
             ;;
 	"list All Tables")
-            
+            listAlltables $1
 	break 
             ;;
         "Quit")
