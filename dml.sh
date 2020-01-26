@@ -26,10 +26,25 @@ for i in "${!Data[@]}"; do
    IFS=':'
 read -ra Types <<< "${Data[i]}"
 
-if [[ ${Types[1]} == 'string' ]]
+if [[ ${Types[1]} == 'string'  ]]
 then
+tableName=~/DBMS/$1/$choice
 echo "please enter the ${Types[0]}"
 read dti
+if [[ $index == 0 ]]
+then
+while [[ true ]]; do
+
+pattern=$(awk 'BEGIN{FS=" ";ORS=" "};{if(NR!=1){{if($1=="'$dti'") print $1}}}' $tableName)
+pattern=`echo $pattern | sed 's/ *$//g'` 
+if [[ "$dti" == "$pattern" ]]; then
+echo -e "invalid input for Primary Key !!"
+	break 3;
+        else
+          break;
+        fi
+done
+fi
 if [[ $dti =~ $string ]]
 then
 dataarr[$index]=$dti
@@ -44,7 +59,8 @@ tableName=~/DBMS/$1/$choice
 
 echo "please enter the ${Types[0]}"
 read dti
-
+if [[ $index == 0 ]]
+then
 while [[ true ]]; do
 if [[ $dti =~ ^[`awk 'BEGIN{FS=" " ;ORS=" "}{if(NR != 1)print $1}' $tableName`]$ ]]; then
           echo -e "invalid input for Primary Key !!"
@@ -53,7 +69,7 @@ if [[ $dti =~ ^[`awk 'BEGIN{FS=" " ;ORS=" "}{if(NR != 1)print $1}' $tableName`]$
           break;
         fi
 done
-
+fi
 if [[ $dti =~ $number ]]
 then
 dataarr[$index]=$dti
@@ -63,8 +79,22 @@ echo "wrong type entered"
 break
 fi
 else
+tableName=~/DBMS/$1/$choice
 echo "please enter the ${Types[0]}"
 read dti
+if [[ $index == 0 ]]
+then
+while [[ true ]]; do
+pattern=$(awk 'BEGIN{FS=" ";ORS=" "};{if(NR!=1){{if($1=="'$dti'") print $1}}}' $tableName)
+pattern=`echo $pattern | sed 's/ *$//g'`
+if [[ "$dti" == "$pattern" ]]; then
+          echo -e "invalid input for Primary Key !!"
+	break 3;
+        else
+          break;
+        fi
+done
+fi
 if [[ $dti =~ $text ]]
 then
 dataarr[$index]=$dti
@@ -75,11 +105,15 @@ break
 fi
 fi
 done
+
+cols=$(awk 'BEGIN{FS=" "};{print NF; exit}' ~/DBMS/$1/$choice) 
+if [[ "${#dataarr[@]}" == "${cols}" ]]; then
 echo "${dataarr[@]}" >> ~/DBMS/$1/$choice
 if [[ $? == 0 ]]
 then
 echo "record added"
 break
+fi
 fi
 break
 done
