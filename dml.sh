@@ -195,6 +195,7 @@ done
 }
 function Removetable()
 {
+declare -a array
 cd ~/DBMS/$1
 i=0
 while read line
@@ -219,6 +220,7 @@ read -r id sn unused <<<"$choice"
 }
 function listAlltables()
 {
+
 cd ~/DBMS/$1
 i=1
 while read line
@@ -229,6 +231,7 @@ done < <(ls)
 }
 function Deletetablecontent() {
   cd ~/DBMS/$1
+declare -a array
 i=0
 while read line
 do
