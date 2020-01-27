@@ -1,6 +1,56 @@
 #!/bin/bash
 . ~/bashProject/Metadata.sh
 #functions
+function Updaterecord()
+{
+declare -a dataarr
+declare -a array
+cd ~/DBMS/$1
+i=0
+while read line
+do
+    array[ $i ]="$line"        
+    (( i++ ))
+done < <(ls)
+
+select choice in "${array[@]}"; do
+
+  [[ -n $choice ]] || { echo "Invalid choice. Please try again." >&2; continue; }
+while IFS= read -r line; do
+IFS=' '
+read -ra Data <<< "$line"    
+break
+done < ~/DBMS/$1/$choice
+tableName=~/DBMS/$1/$choice
+echo "please enter the field you want to update"
+select val in "${Data[@]}"; do
+  [[ -n $val ]] || { echo "Invalid choice. Please try again." >&2; continue; }
+echo $val
+echo "please enter the Primary key"
+read key
+  Crow=$(awk 'BEGIN{FS=" "};{if(NR!=1){{if($1=="'$key'") print NR}}}' $tableName)
+  if [[ $Crow == "" ]]
+  then
+    echo "Not Found"
+    break
+  else
+	echo "Please enter the New value"
+	read value
+fnum=$(awk 'BEGIN{FS=" "};{
+for(i=1;i<=NF;i++){
+if($i=="'$val'"){print i}}}' $tableName)
+awk 'BEGIN{FS=" "};{if(NR=="'$Crow'"){ $"'$fnum'" = "'$value'" }print $0}' $tableName > tmp && mv tmp $tableName
+	for i in "${!Ctype}"; do
+   IFS=':'
+read -ra Types <<< "${Ctype}"
+done
+echo "${Types[1]}"
+      	echo "Row Updated Successfully"
+fi
+
+done 
+done
+}
 function Inserttable()
 {
 declare -a dataarr
@@ -290,7 +340,7 @@ do
             ;;
 
 	"Update Value In Table")
-            
+            Updaterecord $1
 	break 
             ;;
 	"list All Tables")
