@@ -29,23 +29,108 @@ echo $val
 echo "please enter the Primary key"
 read key
   Crow=$(awk 'BEGIN{FS=" "};{if(NR!=1){{if($1=="'$key'") print NR}}}' $tableName)
+  fnum=$(awk 'BEGIN{FS=" "};{
+	for(i=1;i<=NF;i++){
+	if($i=="'$val'"){print i}}}' $tableName)
+	ftype=$(awk 'BEGIN{FS=" "};{
+	for(i=1;i<=NF;i++){
+	if($i=="'$val'"){print $i}}}' $tableName)
+   	IFS=':'
+	read -ra Types <<< "${ftype}"
+	IFS=''
+	
+	echo "${Types[0]}"
   if [[ $Crow == "" ]]
   then
     echo "Not Found"
     break
   else
-	echo "Please enter the New value"
-	read value
-fnum=$(awk 'BEGIN{FS=" "};{
-for(i=1;i<=NF;i++){
-if($i=="'$val'"){print i}}}' $tableName)
-awk 'BEGIN{FS=" "};{if(NR=="'$Crow'"){ $"'$fnum'" = "'$value'" }print $0}' $tableName > tmp && mv tmp $tableName
-	for i in "${!Ctype}"; do
-   IFS=':'
-read -ra Types <<< "${Ctype}"
+	#validation
+	
+	if [[ ${Types[1]} == 'string'  ]]
+then
+tableName=~/DBMS/$1/$choice
+echo "please enter the new value"
+read value
+if [[ $fnum == 1 ]]
+then
+while [[ true ]]; do
+
+pattern=$(awk 'BEGIN{FS=" ";ORS=" "};{if(NR!=1){{if($1=="'$value'") print $1}}}' $tableName)
+pattern=`echo $pattern | sed 's/ *$//g'` 
+if [[ "$value" == "$pattern" ]]; then
+echo -e "invalid input for Primary Key !!"
+	break 2;
+        else
+          break;
+        fi
 done
+fi
+value=`echo $value | sed 's/ *$//g'`
+if [[ $value =~ $string ]]
+then
+awk 'BEGIN{FS=" "};{if(NR=="'$Crow'"){ $"'$fnum'" = "'$value'" }print $0}' $tableName > tmp && mv tmp $tableName
 echo "${Types[1]}"
       	echo "Row Updated Successfully"
+else
+echo "wrong type entered"
+break
+fi
+elif [[ ${Types[1]} == 'number' ]]
+then
+tableName=~/DBMS/$1/$choice
+echo "please enter the new value"
+read value
+if [[ $fnum == 1 ]]
+then
+while [[ true ]]; do
+if [[ $value =~ ^[`awk 'BEGIN{FS=" " ;ORS=" "}{if(NR != 1)print $1}' $tableName`]$ ]]; then
+          echo -e "invalid input for Primary Key !!"
+	break 2;
+        else
+	
+          break;
+        fi
+done
+fi
+echo $value "this is number"
+if [[ $value =~ $number ]]
+then
+awk 'BEGIN{FS=" "};{if(NR=="'$Crow'"){ $"'$fnum'" = "'$value'" }print $0}' $tableName > tmp && mv tmp $tableName
+echo "${Types[1]}"
+      	echo "Row Updated Successfully"
+else
+echo "wrong type entered"
+break
+fi
+else
+tableName=~/DBMS/$1/$choice
+echo "please enter the new value"
+read value
+if [[ $fnum == 1 ]]
+then
+while [[ true ]]; do
+pattern=$(awk 'BEGIN{FS=" ";ORS=" "};{if(NR!=1){{if($1=="'$value'") print $1}}}' $tableName)
+pattern=`echo $pattern | sed 's/ *$//g'`
+if [[ "$value" == "$pattern" ]]; then
+          echo -e "invalid input for Primary Key !!"
+	break 2;
+        else
+          break;
+        fi
+done
+fi
+if [[ $value =~ $text ]]
+then
+awk 'BEGIN{FS=" "};{if(NR=="'$Crow'"){ $"'$fnum'" = "'$value'" }print $0}' $tableName > tmp && mv tmp $tableName
+echo "${Types[1]}"
+      	echo "Row Updated Successfully"
+else
+echo "wrong type entered"
+break
+fi
+fi
+#end validation
 fi
 
 done 
