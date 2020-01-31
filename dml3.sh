@@ -420,8 +420,30 @@ echo "------------------------------------------------------------"
 awk 'BEGIN{OFS=" || "; ORS="\n------------------------------------------------------------\n"} {NR==1;print $0}' $tableName
 done
 }
+function displayRawContaint()
+{
+declare -a array
+cd ~/DBMS/$1
+i=0
+while read line
+do
+    array[ $i ]="$line"        
+    (( i++ ))
+done < <(ls)
+select choice in "${array[@]}"; do
 
-options=("Create Table" "Delete Table" "Insert Into Table" "list All Tables" "Update Value In Table" "Delete From Table" "Display Table Containt" "Quit")
+  [[ -n $choice ]] || { echo "Invalid choice. Please try again." >&2; continue; }
+tableName=~/DBMS/$1/$choice
+echo "plz enter primary Key"
+read pk
+
+echo "------------------------------------------------------------"
+awk 'BEGIN{OFS=" || "; ORS="\n------------------------------------------------------------\n"} {if ($1=="'$pk'")print $0}' $tableName
+done
+}
+
+
+options=("Create Table" "Delete Table" "Insert Into Table" "list All Tables" "Update Value In Table" "Delete From Table" "Display Table Containt" "Display Raw" "Quit")
 while true
 do
 select opt in "${options[@]}"
@@ -456,6 +478,10 @@ do
             ;;
 "Display Table Containt")
          displayTableContaint $1
+	break 
+            ;;
+"Display Raw")
+         displayRawContaint $1
 	break 
             ;;
         "Quit")
