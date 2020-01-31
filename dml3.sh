@@ -402,8 +402,26 @@ done
 read -r id sn unused <<<"$choice"
 
 }
+function displayTableContaint()
+{
+declare -a array
+cd ~/DBMS/$1
+i=0
+while read line
+do
+    array[ $i ]="$line"        
+    (( i++ ))
+done < <(ls)
+select choice in "${array[@]}"; do
 
-options=("Create Table" "Delete Table" "Insert Into Table" "list All Tables" "Update Value In Table" "Delete From Table" "Quit")
+  [[ -n $choice ]] || { echo "Invalid choice. Please try again." >&2; continue; }
+tableName=~/DBMS/$1/$choice
+echo "------------------------------------------------------------"
+awk 'BEGIN{OFS=" || "; ORS="\n------------------------------------------------------------\n"} {NR==1;print $0}' $tableName
+done
+}
+
+options=("Create Table" "Delete Table" "Insert Into Table" "list All Tables" "Update Value In Table" "Delete From Table" "Display Table Containt" "Quit")
 while true
 do
 select opt in "${options[@]}"
@@ -436,6 +454,10 @@ do
          Deletetablecontent $1
 	break 
             ;;
+"Display Table Containt")
+         displayTableContaint $1
+	break 
+            ;;
         "Quit")
             break 2
             ;;
@@ -443,5 +465,7 @@ do
     esac
 done
 done
+
+
 
 
