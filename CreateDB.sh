@@ -12,7 +12,7 @@ then
 echo "Please enter A Valid Name"
 read DBName
 else
-mkdir ~/DBMS/$DBName
+mkdir -p ~/DBMS/$DBName
 if [[ $? == 0 ]]
 then
 echo "DataBase Created"
