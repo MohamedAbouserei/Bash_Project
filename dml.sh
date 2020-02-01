@@ -43,7 +43,7 @@ read key
   if [[ $Crow == "" ]]
   then
     echo "Not Found"
-    break
+    break 3
   else
 	#validation
 	
@@ -60,7 +60,7 @@ pattern=$(awk 'BEGIN{FS=" ";ORS=" "};{if(NR!=1){{if($1=="'$value'") print $1}}}'
 pattern=`echo $pattern | sed 's/ *$//g'` 
 if [[ "$value" == "$pattern" ]]; then
 echo -e "invalid input for Primary Key !!"
-	break 2;
+	break 3;
         else
           break;
         fi
@@ -74,7 +74,7 @@ echo "${Types[1]}"
       	echo "Row Updated Successfully"
 else
 echo "wrong type entered"
-break
+break 3
 fi
 elif [[ ${Types[1]} == 'number' ]]
 then
@@ -86,9 +86,8 @@ then
 while [[ true ]]; do
 if [[ $value =~ ^[`awk 'BEGIN{FS=" " ;ORS=" "}{if(NR != 1)print $1}' $tableName`]$ ]]; then
           echo -e "invalid input for Primary Key !!"
-	break 2;
+	break 3;
         else
-	
           break;
         fi
 done
@@ -101,7 +100,7 @@ echo "${Types[1]}"
       	echo "Row Updated Successfully"
 else
 echo "wrong type entered"
-break
+break 3
 fi
 else
 tableName=~/DBMS/$1/$choice
@@ -114,7 +113,7 @@ pattern=$(awk 'BEGIN{FS=" ";ORS=" "};{if(NR!=1){{if($1=="'$value'") print $1}}}'
 pattern=`echo $pattern | sed 's/ *$//g'`
 if [[ "$value" == "$pattern" ]]; then
           echo -e "invalid input for Primary Key !!"
-	break 2;
+	break 3;
         else
           break;
         fi
@@ -125,12 +124,14 @@ then
 awk 'BEGIN{FS=" "};{if(NR=="'$Crow'"){ $"'$fnum'" = "'$value'" }print $0}' $tableName > tmp && mv tmp $tableName
 echo "${Types[1]}"
       	echo "Row Updated Successfully"
+	break 2
 else
 echo "wrong type entered"
-break
+break 2
 fi
 fi
 #end validation
+break 2
 fi
 
 done 
@@ -402,8 +403,50 @@ done
 read -r id sn unused <<<"$choice"
 
 }
+function displayTableContaint()
+{
+declare -a array
+cd ~/DBMS/$1
+i=0
+while read line
+do
+    array[ $i ]="$line"        
+    (( i++ ))
+done < <(ls)
+select choice in "${array[@]}"; do
 
-options=("Create Table" "Delete Table" "Insert Into Table" "list All Tables" "Update Value In Table" "Delete From Table" "Quit")
+  [[ -n $choice ]] || { echo "Invalid choice. Please try again." >&2; continue; }
+tableName=~/DBMS/$1/$choice
+echo "------------------------------------------------------------"
+awk 'BEGIN{OFS=" || "; ORS="\n------------------------------------------------------------\n"} {NR==1;print $0}' $tableName
+break 2
+done
+}
+function displayRawContaint()
+{
+declare -a array
+cd ~/DBMS/$1
+i=0
+while read line
+do
+    array[ $i ]="$line"        
+    (( i++ ))
+done < <(ls)
+select choice in "${array[@]}"; do
+
+  [[ -n $choice ]] || { echo "Invalid choice. Please try again." >&2; continue; }
+tableName=~/DBMS/$1/$choice
+echo "plz enter primary Key"
+read pk
+
+echo "------------------------------------------------------------"
+awk 'BEGIN{OFS=" || "; ORS="\n------------------------------------------------------------\n"} {if ($1=="'$pk'")print $0}' $tableName
+break 2
+done
+}
+
+
+options=("Create Table" "Delete Table" "Insert Into Table" "list All Tables" "Update Value In Table" "Delete From Table" "Display Table Containt" "Display Raw" "Quit")
 while true
 do
 select opt in "${options[@]}"
@@ -436,6 +479,14 @@ do
          Deletetablecontent $1
 	break 
             ;;
+"Display Table Containt")
+         displayTableContaint $1
+	break 
+            ;;
+"Display Raw")
+         displayRawContaint $1
+	break 
+            ;;
         "Quit")
             break 2
             ;;
@@ -443,5 +494,7 @@ do
     esac
 done
 done
+
+
 
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-
+. ~/bashProject/Metadata.sh
 #functions
 function CreateDB(){
 
@@ -7,7 +7,7 @@ echo "please enter the Database Name:"
 read DBName
 while true 
 do
-if [[ -z "$DBName" ]];
+if [[ -z "$DBName" || ! "$DBName" =~ $text ]];
 then
 echo "Please enter A Valid Name"
 read DBName
