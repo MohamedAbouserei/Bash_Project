@@ -168,6 +168,8 @@ then
 tableName=~/DBMS/$1/$choice
 echo "please enter the ${Types[0]}"
 read dti
+if [[ $dti =~ $string ]]
+then
 if [[ $index == 0 ]]
 then
 while [[ true ]]; do
@@ -182,8 +184,7 @@ echo -e "invalid input for Primary Key !!"
         fi
 done
 fi
-if [[ $dti =~ $string ]]
-then
+
 dataarr[$index]=$dti
 index=$index+1
 else
@@ -196,6 +197,8 @@ tableName=~/DBMS/$1/$choice
 
 echo "please enter the ${Types[0]}"
 read dti
+if [[ $dti =~ $number ]]
+then
 if [[ $index == 0 ]]
 then
 while [[ true ]]; do
@@ -207,8 +210,6 @@ if [[ $dti =~ ^[`awk 'BEGIN{FS=" " ;ORS=" "}{if(NR != 1)print $1}' $tableName`]$
         fi
 done
 fi
-if [[ $dti =~ $number ]]
-then
 dataarr[$index]=$dti
 index=$index+1
 else
@@ -219,6 +220,8 @@ else
 tableName=~/DBMS/$1/$choice
 echo "please enter the ${Types[0]}"
 read dti
+if [[ $dti =~ $text ]]
+then
 if [[ $index == 0 ]]
 then
 while [[ true ]]; do
@@ -232,8 +235,6 @@ if [[ "$dti" == "$pattern" ]]; then
         fi
 done
 fi
-if [[ $dti =~ $text ]]
-then
 dataarr[$index]=$dti
 index=$index+1
 else
